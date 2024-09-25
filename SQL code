@@ -1,0 +1,57 @@
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY AUTO_INCREMENT,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Email VARCHAR(100) UNIQUE NOT NULL,
+    Phone VARCHAR(15) NOT NULL,
+    Address VARCHAR(255)
+);
+
+CREATE TABLE Rooms (
+    RoomID INT PRIMARY KEY AUTO_INCREMENT,
+    RoomNumber VARCHAR(10) UNIQUE NOT NULL,
+    RoomType VARCHAR(50) NOT NULL,
+    PricePerNight DECIMAL(10, 2) NOT NULL,
+    Availability BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE Bookings (
+    BookingID INT PRIMARY KEY AUTO_INCREMENT,
+    CustomerID INT NOT NULL,
+    RoomID INT NOT NULL,
+    CheckInDate DATE NOT NULL,
+    CheckOutDate DATE NOT NULL,
+    TotalAmount DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
+    FOREIGN KEY (RoomID) REFERENCES Rooms(RoomID)
+);
+
+CREATE TABLE Transactions (
+    TransactionID INT PRIMARY KEY AUTO_INCREMENT,
+    BookingID INT NOT NULL,
+    TransactionDate DATE NOT NULL,
+    Amount DECIMAL(10, 2) NOT NULL,
+    PaymentMethod VARCHAR(50) NOT NULL,
+    FOREIGN KEY (BookingID) REFERENCES Bookings(BookingID)
+);
+
+INSERT INTO Customers (FirstName, LastName, Email, Phone, Address)
+VALUES 
+('John', 'Doe', 'john.doe@example.com', '1234567890', '123 Elm Street'),
+('Jane', 'Smith', 'jane.smith@example.com', '0987654321', '456 Oak Avenue');
+
+INSERT INTO Rooms (RoomNumber, RoomType, PricePerNight)
+VALUES 
+('101', 'Single', 100.00),
+('102', 'Double', 150.00),
+('103', 'Suite', 300.00);
+
+INSERT INTO Bookings (CustomerID, RoomID, CheckInDate, CheckOutDate, TotalAmount)
+VALUES 
+(1, 1, '2024-07-01', '2024-07-05', 400.00),
+(2, 3, '2024-07-03', '2024-07-10', 2100.00);
+
+INSERT INTO Transactions (BookingID, TransactionDate, Amount, PaymentMethod)
+VALUES 
+(1, '2024-07-01', 400.00, 'Credit Card'),
+(2, '2024-07-03', 2100.00, 'Debit Card');
